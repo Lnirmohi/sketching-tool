@@ -6,7 +6,7 @@ function Login() {
     return (
         <div className="login-page">
             <div className="container">
-                <h2>Login to continue</h2>
+                <p className="form-heading">Login to continue</p>
                 <Form method="" action="">
                     <input className="credentials" placeholder="Email" type="email" name="email" />
                     <input className="credentials" placeholder="Password" type="password" name="password" />
