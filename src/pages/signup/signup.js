@@ -9,7 +9,7 @@ import * as constants from "../../constants";
 import "./signup.css";
 
 const successToast = () => toast.success(constants.SIGNUP_SUCCESS);
-const failureToast = () => {toast.error(constants.SIGNUP_FAILED)} 
+const failureToast = () => {toast.error(constants.SIGNUP_FAILED)};
 
 function SignUp() {
 
