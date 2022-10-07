@@ -1,14 +1,49 @@
 import { Link } from "react-router-dom";
 import { useFormik } from 'formik';
 import axios from "../../services/axios";
-import * as constants from "../../constants";
+import { AuthContext } from "../../services/authenticate";
+import toast, { Toaster } from 'react-hot-toast';
 
+import { useRef, useEffect, useContext } from "react";
+import * as Yup from 'yup';
+
+import * as constants from "../../constants";
 import "./login.css";
-import { useRef, useEffect } from "react";
+
+const failureToast = () => {toast.error(constants.LOGIN_FAILED)}
 
 function Login() {
 
     const emailRef = useRef();
+    const {setAuth} = useContext(AuthContext);
+
+    const LoginSchema = Yup.object({
+        email: Yup.string().email('Invalid email address').required('Required'),
+        password: Yup.string()
+            .required('No password provided.') 
+            .min(8, 'Password is too short - should be 8 chars minimum.')
+    });
+
+    useEffect(() => {
+        emailRef.current.focus();
+    }, []);
+
+    const handleSubmit = (values) => {
+
+        console.log(values);
+        axios.post(constants.LOGIN_URL, values)
+            .then(result => {
+                const {data, status} = result;
+
+                if (status === 200) {
+                    setAuth({ token: data.token, email: data.email });
+                }
+            })
+            .catch(error => {
+                console.log("Error: ", error);
+                failureToast();
+            });
+    }
 
     const loginForm = useFormik({
         
@@ -16,45 +51,52 @@ function Login() {
           email: "",
           password: ""
         },
-        onSubmit: values => {
-            console.log(values);
-            axios.post(constants.LOGIN_URL, values)
-                .then(result => {
-                    console.log(result);
-                });
-        },
+        onSubmit: (values) => {handleSubmit(values)},
+        validationSchema: LoginSchema,
     });
-
-    useEffect(() => {
-        emailRef.current.focus();
-    }, []);
 
     return (
         <div className="login-page">
             <div className="container">
                 <p className="form-heading">Login to continue</p>
 
-                <form onSubmit={loginForm.handleSubmit}>
+                <form onSubmit={loginForm.handleSubmit} noValidate className="login-form">
                     <input 
                         className="credentials" 
-                        placeholder="Email" 
+                        placeholder="Email"
+                        id="email" 
                         type="email" 
                         name="email"
                         onChange={loginForm.handleChange}
+                        onBlur={loginForm.handleBlur}
                         value={loginForm.values.email}
-                        required
                         ref={emailRef}
+                        size="30"
                     />
+                    {
+                       loginForm.touched.email &&loginForm.errors.email ? 
+                            <span className="input-error">{loginForm.errors.email}</span> 
+                            : null
+                    }
                     <input 
                         className="credentials" 
-                        placeholder="Password" 
+                        placeholder="Password"
+                        id="password" 
                         type="password" 
                         name="password"
                         onChange={loginForm.handleChange} 
+                        onBlur={loginForm.handleBlur}
                         value={loginForm.values.password}
-                        required
+                        size="30"
                     />
-                    <button className="login-btn" type="submit">Login</button>
+                    
+                    {
+                       loginForm.touched.password &&loginForm.errors.password ? 
+                            <span className="input-error">{loginForm.errors.password}</span> 
+                            : null
+                    }
+
+                    <button className="login-btn" type="submit" disabled={!loginForm.isValid}>Login</button>
                 </form>
 
                 <section className="no-account-section">
@@ -62,6 +104,11 @@ function Login() {
                     <Link to="/signup">Sign Up</Link>
                 </section>
             </div>
+            <Toaster 
+                toastOptions={{
+                    duration: 4000
+                }}
+            />
         </div>
     );
 }
