@@ -8,24 +8,20 @@ import * as Yup from 'yup';
 import * as constants from "../../constants";
 import "./signup.css";
 
-const successToast = () => toast.success(constants.SIGNUP_SUCCESS)  
+const successToast = () => toast.success(constants.SIGNUP_SUCCESS);
+const failureToast = () => {toast.error(constants.SIGNUP_FAILED)} 
 
 function SignUp() {
 
     const firstnameRef = useRef();
     const navigate = useNavigate();
 
-    const signUpForm = useFormik({
-        
-        initialValues: {
-          firstName: "",
-          lastName: "",
-          email: "",
-          password: ""
-        },
-        onSubmit: values => {
+    useEffect(() => {
+        firstnameRef.current.focus();
+    }, []);
 
-            axios.post(constants.SIGNUP_URL, values)
+    const handleSubmit = (values) => {
+        axios.post(constants.SIGNUP_URL, values)
                 .then(result => {
                     const data = result.data;
 
@@ -36,8 +32,22 @@ function SignUp() {
                             navigate("/login");
                         }, 2800);
                     }
+                })
+                .catch(error => {
+                    console.log("Error: ", error);
+                    failureToast();
                 });
+    }
+
+    const signUpForm = useFormik({
+        
+        initialValues: {
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: ""
         },
+        onSubmit: values => {handleSubmit(values)},
         validationSchema: Yup.object({
             firstName: Yup.string().required('Required'),
             lastName: Yup.string().required('Required'),
@@ -47,10 +57,6 @@ function SignUp() {
                 .min(8, 'Password is too short - should be 8 chars minimum.')
           }),
     });
-
-    useEffect(() => {
-        firstnameRef.current.focus();
-    }, []);
 
     return (
         <div className="register-page">
@@ -123,7 +129,7 @@ function SignUp() {
                             <div className="input-error">{signUpForm.errors.password}</div> 
                             : null
                     }
-                    <button className="login-btn" type="submit" disabled={signUpForm.isSubmitting || signUpForm.errors}>Register</button>
+                    <button className="login-btn" type="submit" disabled={!signUpForm.isValid}>Register</button>
                 </Form>
 
                 <section className="already-account-section">
@@ -145,12 +151,15 @@ function SignUp() {
                     color: '#fff',
                     },
                     success: {
-                    duration: 2500,
-                    theme: {
-                        primary: 'green',
-                        secondary: 'black',
+                        duration: 2500,
+                        theme: {
+                            primary: 'green',
+                            secondary: 'black',
+                        },
                     },
-                    },
+                    error: {
+                        duration: 4000
+                    }
                 }}
             />
         </div>
