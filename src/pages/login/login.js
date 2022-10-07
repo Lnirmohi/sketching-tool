@@ -10,7 +10,7 @@ import * as Yup from 'yup';
 import * as constants from "../../constants";
 import "./login.css";
 
-const failureToast = () => {toast.error(constants.LOGIN_FAILED)}
+const failureToast = () => {toast.error(constants.LOGIN_FAILED)};
 
 function Login() {
 
@@ -37,6 +37,9 @@ function Login() {
 
                 if (status === 200) {
                     setAuth({ token: data.token, email: data.email });
+                    window.localStorage.setItem(
+                        'token', data.token
+                    );
                 }
             })
             .catch(error => {
