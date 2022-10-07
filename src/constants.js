@@ -3,4 +3,6 @@ export const SIGNUP_URL = "/api/users";
 
 /* ===========NOTIFICATION=========== */
 
-export const SIGNUP_SUCCES = "Login Successful!";
+export const SIGNUP_SUCCESS = "Sigup Successful!";
+export const LOGIN_SUCCESS = "Login Successful!";
+export const LOGIN_FAILED = "Invalid email or password!"
