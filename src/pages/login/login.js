@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { useFormik } from 'formik';
-import axios from "../../services/axios";
 import { AuthContext } from "../../services/authenticate";
 import toast, { Toaster } from 'react-hot-toast';
+import { loginService } from "../../services/user-service";
 
 import { useRef, useEffect, useContext } from "react";
 import * as Yup from 'yup';
@@ -31,7 +31,9 @@ function Login() {
     const handleSubmit = (values) => {
 
         console.log(values);
-        axios.post(constants.LOGIN_URL, values)
+        
+
+        loginService(values)
             .then(result => {
                 const {data, status} = result;
 
@@ -41,11 +43,11 @@ function Login() {
                         'token', data.token
                     );
                 }
-            })
-            .catch(error => {
+            }).catch(error => {
+
                 console.log("Error: ", error);
                 failureToast();
-            });
+            })
     }
 
     const loginForm = useFormik({

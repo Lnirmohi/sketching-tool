@@ -1,9 +1,9 @@
 import { Form, Link, useNavigate } from "react-router-dom";
-import axios from "../../services/axios";
 import { useRef, useEffect } from "react";
 import { useFormik } from 'formik';
 import toast, { Toaster } from 'react-hot-toast';
 import * as Yup from 'yup';
+import { signupService } from "../../services/user-service";
 
 import * as constants from "../../constants";
 import "./signup.css";
@@ -21,22 +21,23 @@ function SignUp() {
     }, []);
 
     const handleSubmit = (values) => {
-        axios.post(constants.SIGNUP_URL, values)
-                .then(result => {
-                    const data = result.data;
+        
+        signupService(values)
+            .then(result => {
+                const {data, status} = result;
 
-                    if(result.status === 201) {
+                    if(status === 201) {
                         successToast();
 
                         setTimeout(() => {
                             navigate("/login");
                         }, 2800);
                     }
-                })
-                .catch(error => {
-                    console.log("Error: ", error);
-                    failureToast();
-                });
+            })
+            .catch(error => {
+                console.log("Error: ", error);
+                failureToast();
+            })
     }
 
     const signUpForm = useFormik({
