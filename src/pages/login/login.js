@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from 'formik';
 import { AuthContext } from "../../services/authenticate";
 import toast, { Toaster } from 'react-hot-toast';
@@ -16,6 +16,7 @@ function Login() {
 
     const emailRef = useRef();
     const {setAuth} = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const LoginSchema = Yup.object({
         email: Yup.string().email('Invalid email address').required('Required'),
@@ -36,12 +37,17 @@ function Login() {
         loginService(values)
             .then(result => {
                 const {data, status} = result;
+                const {token, email} = data;
 
                 if (status === 200) {
-                    setAuth({ token: data.token, email: data.email });
+
+                    setAuth({token, email});
+                    
                     window.localStorage.setItem(
-                        'token', data.token
+                        'token', token
                     );
+
+                    navigate("/sketch");
                 }
             }).catch(error => {
 
