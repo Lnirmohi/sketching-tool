@@ -9,42 +9,77 @@ function SketchHome() {
     const draw = useCallback((graphics) => {
         console.log(graphics);
 
-        graphics.beginFill(0x0033cc, 1)
+        let isDraw = false;
+        let lastPos = {x: 0, y: 0}
+
+        graphics.beginFill(0xFFFFFF, 1)
         graphics.drawRect(0, 0, window.innerWidth, window.innerWidth)
-        graphics.endFill()
+        graphics.endFill();
 
-        graphics.on("mousedown", mdown);
+        graphics.on("mousedown", (e) => {
+        
+            const {x, y} = e.data.global;
+            
+            lastPos.x = x;
+            lastPos.y = y;
+            
+            isDraw = true;
+            
+        });
 
-        graphics.on("mouseup",  mup);
+        graphics.on("mouseup",  (e) => {
+            isDraw = false;
+            
+        });
 
-        graphics.on("mousemove", move);
+        graphics.on("mousemove", (e) => {
+
+            if(isDraw) {
+                const {x, y} = e.data.global;
+                const target = e.target;
+                target.lineStyle(10);
+    
+                const currentPosition = {};
+    
+                currentPosition.x = x;
+                currentPosition.y = y;
+            
+                target.beginFill(0xffffff, 1);
+                target.moveTo(lastPos.x, lastPos.y);
+                target.lineTo(currentPosition.x, currentPosition.y);
+                target.endFill();
+            }
+        });
 
     }, []);
 
+
     const mdown = (e) => {
-
+        
         const {x, y} = e.data.global;
-
+        
         setLastPosition({x, y});
-
+        
         setIsDrawing(true);
+        console.log("mousedown", isDrawing, lastPosition);
     };
 
     const mup = (e) => {
         setIsDrawing(false);
+        console.log("mouseup", isDrawing, lastPosition);
     };
 
     const move = (e) => {
 
-        const {x, y} = e.data.global;
-        const target = e.target;
-
-        const currentPosition = {};
-
-        currentPosition.x = x;
-        currentPosition.y = y;
-        
         if(isDrawing) {
+            const {x, y} = e.data.global;
+            const target = e.target;
+
+            const currentPosition = {};
+
+            currentPosition.x = x;
+            currentPosition.y = y;
+        
             target.beginFill(0xffffff, 1);
             target.moveTo(lastPosition.x, lastPosition.y);
             target.lineTo(currentPosition.x, currentPosition.y);
