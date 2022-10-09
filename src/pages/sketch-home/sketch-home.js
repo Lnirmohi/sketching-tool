@@ -4,7 +4,7 @@ import * as PIXI from "pixi.js";
 
 import "./sketch-home.css";
 import { AuthContext } from "../../services/authenticate";
-import { sketchSave } from "../../services/sketch-service";
+import { saveSketch } from "../../services/sketch-service";
 
 function SketchHome() {
 
@@ -50,7 +50,7 @@ function SketchHome() {
     const mup = (e) => {
         isDrawing = false;
         console.log(stageRef, e);
-        // saveSketchAsImage(e.target);
+        saveSketchAsImage(e.target);
     };
 
     const mmove = (e) => {
@@ -95,9 +95,9 @@ function SketchHome() {
 
         const token = auth.auth.token;
 
-        sketchSave(imageData, token)
+        saveSketch(imageData, token)
             .then(result => {
-
+                console.log(result);
             })
             .catch(error => {
                 console.log("Error while saving: ", error);
