@@ -1,5 +1,6 @@
 export const LOGIN_URL = "/api/login";
 export const SIGNUP_URL = "/api/users";
+export const SKETCH_SAVE_URL = "/api/sketch";
 
 /* ===========NOTIFICATION=========== */
 
