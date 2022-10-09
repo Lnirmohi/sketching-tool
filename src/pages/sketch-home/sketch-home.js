@@ -1,91 +1,71 @@
 import { useRef, useEffect, useCallback, useState } from "react";
 import { Stage, Graphics } from "@saitonakamura/react-pixi";
+import * as PIXI from "pixi.js";
 
 function SketchHome() {
 
-    const [isDrawing, setIsDrawing] = useState(false);
-    const [lastPosition, setLastPosition] = useState({x: 0, y: 0})
+    const lastPos = {x: 0, y: 0};
+    let isDrawing = false;
 
     const draw = useCallback((graphics) => {
         console.log(graphics);
 
-        let isDraw = false;
-        let lastPos = {x: 0, y: 0}
 
         graphics.beginFill(0xFFFFFF, 1)
         graphics.drawRect(0, 0, window.innerWidth, window.innerWidth)
         graphics.endFill();
 
         graphics.on("mousedown", (e) => {
-        
+            
+            if(isDrawing) {
+                return;
+            } 
             const {x, y} = e.data.global;
             
             lastPos.x = x;
             lastPos.y = y;
             
-            isDraw = true;
-            
+            isDrawing = true;
         });
 
         graphics.on("mouseup",  (e) => {
-            isDraw = false;
+            isDrawing = false;
             
         });
 
         graphics.on("mousemove", (e) => {
 
-            if(isDraw) {
-                const {x, y} = e.data.global;
-                const target = e.target;
-                target.lineStyle(10);
-    
-                const currentPosition = {};
-    
-                currentPosition.x = x;
-                currentPosition.y = y;
-            
-                target.beginFill(0xffffff, 1);
-                target.moveTo(lastPos.x, lastPos.y);
-                target.lineTo(currentPosition.x, currentPosition.y);
-                target.endFill();
+            if(!isDrawing) {
+                return;
             }
-        });
 
-    }, []);
-
-
-    const mdown = (e) => {
-        
-        const {x, y} = e.data.global;
-        
-        setLastPosition({x, y});
-        
-        setIsDrawing(true);
-        console.log("mousedown", isDrawing, lastPosition);
-    };
-
-    const mup = (e) => {
-        setIsDrawing(false);
-        console.log("mouseup", isDrawing, lastPosition);
-    };
-
-    const move = (e) => {
-
-        if(isDrawing) {
             const {x, y} = e.data.global;
             const target = e.target;
+            target.lineStyle({
+                width: 5,
+                cap: PIXI.LINE_CAP.BUTT,
+                join: PIXI.LINE_JOIN.BEVEL,
+                color: 0xFBE0,
+                native: true
+                
+            });
 
             const currentPosition = {};
 
             currentPosition.x = x;
             currentPosition.y = y;
-        
+
             target.beginFill(0xffffff, 1);
-            target.moveTo(lastPosition.x, lastPosition.y);
+            target.moveTo(lastPos.x, lastPos.y);
             target.lineTo(currentPosition.x, currentPosition.y);
-            target.endFill();
-        }
-    };
+            // target.endFill();
+            
+            lastPos.x = currentPosition.x;
+            lastPos.y = currentPosition.y;
+            
+        });
+
+    }, []);
 
     return (
         <div id="sketch-container">
