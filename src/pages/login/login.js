@@ -37,11 +37,11 @@ function Login() {
         loginService(values)
             .then(result => {
                 const {data, status} = result;
-                const {token, email} = data;
+                const {token, email, firstName, lastName} = data;
 
                 if (status === 200) {
 
-                    setAuth({token, email});
+                    setAuth({token, email, username: `${firstName} ${lastName}`});
                     
                     window.localStorage.setItem(
                         'token', token
