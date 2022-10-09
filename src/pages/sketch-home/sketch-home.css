@@ -1,3 +1,21 @@
-canvas {
+.sketch-container {
+    width: 100vw;
+    height: 100vh;
+
+    padding: 30px;
+}
+
+.stage-container {
+    margin: 30px auto;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+
+.sketch-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.user {
+    text-transform: capitalize;
+    font-size: 22px;
 }
