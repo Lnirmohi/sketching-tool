@@ -4,6 +4,7 @@ import * as PIXI from "pixi.js";
 
 import "./sketch-home.css";
 import { AuthContext } from "../../services/authenticate";
+import { sketchSave } from "../../services/sketch-service";
 
 function SketchHome() {
 
@@ -49,7 +50,7 @@ function SketchHome() {
     const mup = (e) => {
         isDrawing = false;
         console.log(stageRef, e);
-        saveSketchAsImage(e.target);
+        // saveSketchAsImage(e.target);
     };
 
     const mmove = (e) => {
@@ -88,20 +89,19 @@ function SketchHome() {
 
         const app = stageRef.current.app;
 
-        app.renderer.plugins.extract.canvas(graphicsObj).toBlob((blob) => {
-            
-            const newImg = document.createElement('img');
-            const url = URL.createObjectURL(blob);
-          
-            newImg.onload = () => {
-              // no longer need to read the blob so it's revoked
-              URL.revokeObjectURL(url);
-            };
-          
-            newImg.src = url;
-            console.log(newImg);
-            // document.body.appendChild(newImg);
-          });
+        const canvas = app.renderer.plugins.extract.canvas(graphicsObj);
+
+        const imageData = canvas.toDataURL();
+
+        const token = auth.auth.token;
+
+        sketchSave(imageData, token)
+            .then(result => {
+
+            })
+            .catch(error => {
+                console.log("Error while saving: ", error);
+            });
     };
 
     return (
