@@ -6,7 +6,6 @@
 }
 
 .stage-container {
-    margin: 30px auto;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
@@ -18,4 +17,45 @@
 .user {
     text-transform: capitalize;
     font-size: 22px;
+}
+
+.sketch-info-section {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.sketch-name {
+    border: none;
+    border-bottom: 1px solid black;
+    font-size: 22px;
+    margin-top: 16px;
+    padding-bottom: 4px;
+    outline: none;
+}
+
+.main-area {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.sidebar {
+    width: 100%;
+    padding: 30px;
+}
+
+.sidebar__heading {
+    font-size: 24px;
+    color: #8a2be2;
+}
+
+.user-sketch-list{
+    list-style: none;
+    margin-bottom: 12px;
+}
+
+.sketch-item {
+    font-size: 20px;
+    color: #6495ed;
+    margin-top: 8px;
 }

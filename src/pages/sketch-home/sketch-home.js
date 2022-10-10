@@ -10,6 +10,7 @@ function SketchHome() {
 
     const stageRef = useRef();
     const auth = useContext(AuthContext);
+    const [sketches, setSketches] = useState([...auth.auth.sketches]);
 
     const lastPos = {x: 0, y: 0};
     let isDrawing = false;
@@ -18,7 +19,7 @@ function SketchHome() {
         console.log(graphics);
 
         graphics.beginFill(0xFFFFFF, 1)
-        graphics.drawRect(0, 0, 1600, 800)
+        graphics.drawRect(0, 0, 1500, 800)
         graphics.endFill();
 
         graphics.on("mousedown", mdown);
@@ -97,7 +98,11 @@ function SketchHome() {
 
         saveSketch(imageData, token)
             .then(result => {
-                console.log(result);
+                const {data, status} = result;
+                
+                if(status === 200) {
+                    setSketches(sketches.concat([data]));
+                }
             })
             .catch(error => {
                 console.log("Error while saving: ", error);
@@ -110,22 +115,35 @@ function SketchHome() {
                 <h1>Sketch Home</h1>
                 <p className="user">{auth.auth.username}</p>
             </div>
-            <div className="stage-container">
-                <Stage
-                    width={1600}
-                    height={800}
-                    options={{
-                        backgroundColor: 0xffffff,
-                        antialias: true,
-                        interactive: true
-                    }}
-                    ref={stageRef}
-                >
-                    <Graphics
-                        draw={draw}
-                        interactive={true}
-                    />
-                </Stage>
+            <div className="sketch-info-section">
+                <input type="text" placeholder="Enter sketch name" className="sketch-name" />
+            </div>
+            <div className="main-area">
+                <div className="stage-container">
+                    <Stage
+                        width={1500}
+                        height={800}
+                        options={{
+                            backgroundColor: 0xffffff,
+                            antialias: true,
+                            interactive: true
+                        }}
+                        ref={stageRef}
+                    >
+                        <Graphics
+                            draw={draw}
+                            interactive={true}
+                        />
+                    </Stage>
+                </div>
+                <div className="sidebar">
+                    <p className="sidebar__heading">User Sketches</p>
+                    <ul className="user-sketch-list">
+                        {
+                            sketches.map(sketch => <li key={sketch.id} className="sketch-item">{sketch.name}</li>)
+                        }
+                    </ul>
+                </div>
             </div>
         </div>
     );
