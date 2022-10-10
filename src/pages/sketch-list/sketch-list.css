@@ -2,3 +2,25 @@
     list-style: none;
     margin-bottom: 12px;
 }
+
+.sketch-item {
+    position: relative;
+}
+  
+.sketch-item .sketch-span {
+    visibility: hidden;
+    width: 600px;
+    height: 400px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    left: -1000px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+
+    position: absolute;
+    z-index: 1;
+}
+  
+.sketch-item:hover .sketch-span {
+    visibility: visible;
+}
