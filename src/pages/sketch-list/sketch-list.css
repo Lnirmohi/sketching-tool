@@ -5,12 +5,11 @@
 
 .sketch-item {
     position: relative;
+    display: inline-block;
 }
   
 .sketch-item .sketch-span {
     visibility: hidden;
-    width: 600px;
-    height: 400px;
     background-color: black;
     color: #fff;
     text-align: center;
@@ -23,4 +22,9 @@
   
 .sketch-item:hover .sketch-span {
     visibility: visible;
+}
+
+.sketch-img {
+    width: 750px;
+    height: 400px;
 }
