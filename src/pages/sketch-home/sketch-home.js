@@ -5,17 +5,19 @@ import * as PIXI from "pixi.js";
 import "./sketch-home.css";
 import { AuthContext } from "../../services/authenticate";
 import { saveSketch } from "../../services/sketch-service";
+import SketchList from "../sketch-list/sketch-list";
 
 function SketchHome() {
 
     const stageRef = useRef();
+    const graphicsRef = useRef();
     const auth = useContext(AuthContext);
     const [sketches, setSketches] = useState([...auth.auth.sketches]);
 
     const lastPos = {x: 0, y: 0};
     let isDrawing = false;
 
-    const draw = (graphics) => {
+    const draw = useCallback((graphics) => {
         console.log(graphics);
 
         graphics.beginFill(0xFFFFFF, 1)
@@ -29,7 +31,7 @@ function SketchHome() {
         
         console.log(stageRef);
         console.log(auth);
-    };
+    }, []);
 
     const mout = (e) => {
         isDrawing = false;
@@ -51,7 +53,6 @@ function SketchHome() {
     const mup = (e) => {
         isDrawing = false;
         console.log(stageRef, e);
-        saveSketchAsImage(e.target);
     };
 
     const mmove = (e) => {
@@ -86,7 +87,9 @@ function SketchHome() {
 
     };
 
-    const saveSketchAsImage = (graphicsObj) => {
+    const handleSketchSave = () => {
+
+        const graphicsObj = graphicsRef.current;
 
         const app = stageRef.current.app;
 
@@ -117,6 +120,7 @@ function SketchHome() {
             </div>
             <div className="sketch-info-section">
                 <input type="text" placeholder="Enter sketch name" className="sketch-name" />
+                <button className="save-sketch-btn" type="button" onClick={handleSketchSave}>Save Sketch</button>
             </div>
             <div className="main-area">
                 <div className="stage-container">
@@ -133,16 +137,13 @@ function SketchHome() {
                         <Graphics
                             draw={draw}
                             interactive={true}
+                            ref={graphicsRef}
                         />
                     </Stage>
                 </div>
                 <div className="sidebar">
                     <p className="sidebar__heading">User Sketches</p>
-                    <ul className="user-sketch-list">
-                        {
-                            sketches.map(sketch => <li key={sketch.id} className="sketch-item">{sketch.name}</li>)
-                        }
-                    </ul>
+                    <SketchList sketches={sketches} />
                 </div>
             </div>
         </div>
