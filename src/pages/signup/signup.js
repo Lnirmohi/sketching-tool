@@ -16,9 +16,6 @@ function SignUp() {
     const firstnameRef = useRef();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        firstnameRef.current.focus();
-    }, []);
 
     const handleSubmit = (values) => {
         

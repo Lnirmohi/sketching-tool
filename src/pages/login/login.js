@@ -25,9 +25,6 @@ function Login() {
             .min(8, 'Password is too short - should be 8 chars minimum.')
     });
 
-    useEffect(() => {
-        emailRef.current.focus();
-    }, []);
 
     const handleSubmit = (values) => {
 
