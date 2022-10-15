@@ -6,12 +6,15 @@ import "./sketch-home.css";
 import { AuthContext } from "../../services/authenticate";
 import { saveSketch } from "../../services/sketch-service";
 import SketchList from "../sketch-list/sketch-list";
+import SketchName from "../../sketch-name/sketch-name";
 
 function SketchHome() {
 
     const stageRef = useRef();
     const graphicsRef = useRef();
     const auth = useContext(AuthContext);
+    const [sketchName, setSketchname] = useState("");
+    const [savedSketchName, setSavedSketchname] = useState("");
     const [sketches, setSketches] = useState([...auth.auth.sketches]);
 
     const lastPos = {x: 0, y: 0};
@@ -112,21 +115,34 @@ function SketchHome() {
             });
     };
 
+    const handleSketchNameChange = ({target}) => {
+        const {value} = target;
+        setSketchname(value);
+    };
+
+    const handleNameSave = (e) => {
+        setSavedSketchname(sketchName);
+    };
+
     return (
         <div className="sketch-container">
             <div className="sketch-header">
                 <h1>Sketch Home</h1>
                 <p className="user">{auth.auth.username}</p>
             </div>
-            <div className="sketch-info-section">
-                <input type="text" placeholder="Enter sketch name" className="sketch-name" />
-                <button className="save-sketch-btn" type="button" onClick={handleSketchSave}>Save Sketch</button>
-            </div>
+
+            <SketchName 
+                sketchName={sketchName} 
+                handleSketchSave={handleSketchSave} 
+                handleSketchNameChange={handleSketchNameChange}
+                handleNameSave={handleNameSave}
+            />
+            
             <div className="main-area">
                 <div className="stage-container">
                     <Stage
-                        width={1500}
-                        height={800}
+                        width={1400}
+                        height={700}
                         options={{
                             backgroundColor: 0xffffff,
                             antialias: true,

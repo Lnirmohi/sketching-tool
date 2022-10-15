@@ -1,16 +1,16 @@
 .sketch-container {
-    width: 100vw;
-    height: 100vh;
-
-    padding: 30px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(10, 10vh);
 }
 
 .stage-container {
+    grid-area: 1 / 1 / 6 / 9;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
 .sketch-header {
-    display: flex;
+    grid-area: 1 / 1 / 2 / 6;
     justify-content: space-between;
 }
 
@@ -19,32 +19,25 @@
     font-size: 22px;
 }
 
-.sketch-info-section {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.sketch-name {
-    border: none;
-    border-bottom: 1px solid black;
-    font-size: 22px;
-    margin-top: 16px;
-    padding-bottom: 4px;
-    outline: none;
-}
-
 .main-area {
-    display: flex;
+    grid-area:3 / 1 / 11 / 6;
+  
+    display: grid;
+    grid-template-columns: repeat(10, 5fr);
+    grid-template-rows: repeat(5, 1fr);
     justify-content: space-between;
-    gap: 12px;
 }
 
 .sidebar {
-    width: 100%;
-    padding: 30px;
+    grid-area: 1 / 9 / 6 / 11;
+
+    display:grid;
+    grid-template-rows: repeat(12, 1fr);
 }
 
 .sidebar__heading {
+    grid-row-start: 1;
+    grid-row-end: 2;
     font-size: 24px;
     color: #8a2be2;
 }
